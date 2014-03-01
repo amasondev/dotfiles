@@ -43,8 +43,8 @@ end
 
 run_once("urxvtd")
 run_once("compton")
-run_once("pnmixer")
 run_once("pidgin")
+run_once("pnmixer")
 -- }}}
 -- {{{ Variable definitions
 
@@ -237,8 +237,8 @@ end
 root.buttons(awful.util.table.join(
     awful.button({ }, 1, function () mymainmenu:hide() end),
     awful.button({ }, 3, function () mymainmenu:toggle() end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
+    awful.button({ modkey }, 4, awful.tag.viewnext),
+    awful.button({ modkey }, 5, awful.tag.viewprev)
 ))
 -- }}}
 
@@ -371,8 +371,8 @@ clientbuttons = awful.util.table.join(
     awful.button({ modkey }, 1, awful.mouse.client.move),
     awful.button({ modkey }, 3, awful.mouse.client.resize),
     awful.button({ modkey, "Shift" }, 1, awful.mouse.client.resize),
-    awful.button({ modkey }, 4, awful.tag.viewnext),
-    awful.button({ modkey }, 5, awful.tag.viewprev))
+    awful.button({ modkey }, 4, awful.tag.viewidx(+1)),
+    awful.button({ modkey }, 5, awful.tag.viewidx(-1)))
 
 -- Set keys
 root.keys(globalkeys)
