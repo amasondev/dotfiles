@@ -6,6 +6,8 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
+local vicious = require("vicious")
+local lain = require("lain")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -42,14 +44,19 @@ function run_once(cmd)
 end
 
 run_once("urxvtd")
+run_once("xfce4-power-manager")
 run_once("compton")
 run_once("pidgin")
-run_once("pnmixer")
+run_once("pasystray")
+run_once("nm-applet")
+run_once("bluetooth-applet")
+
 -- }}}
 -- {{{ Variable definitions
 
 -- beautiful init
-beautiful.init(os.getenv("HOME") .. "/.config/awesome/themes/judgement/theme.lua")
+beautiful.init(os.getenv("HOME") .. 
+"/.config/awesome/themes/adwaita/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt" or "xterm"
@@ -76,7 +83,7 @@ local layouts =
     awful.layout.suit.spiral,
     awful.layout.suit.spiral.dwindle,
     awful.layout.suit.max,
-    awful.layout.suit.max.fullscreen,
+    --awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier
 }
 -- }}}
@@ -93,7 +100,7 @@ end
 -- Define a tag table which hold all screen tags.
 tags = {
 	names = { "main" , "chat" , "dev" , "media" , "misc" , "mail" },
-	layout = { layouts[1], layouts[1], layouts[2], layouts[1], layouts[1], layouts[2] }
+	layout = { layouts[1], layouts[1], layouts[2], layouts[1], layouts[1], layouts[1] }
 }
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
@@ -112,11 +119,12 @@ myappmenu = {
         { "Steam" , "steam" },
 	{ "Skype" , "skype" },
 	{ "Transmission" , "transmission-gtk" },
-	{ "VirtualBox" , "virtualbox" }
+	{ "VirtualBox" , "virtualbox" },
+	{ "OnBoard" , "onboard" }
 }
 
 mymainmenu = awful.menu({ items = { { "Internet", "firefox" },
-                                    { "Files", "nautilus" },
+                                    { "Files", "thunar" },
                                     { "Mail", "thunderbird" },
                                     { "Terminal", terminal },
                                     { "-----------" },
@@ -135,9 +143,16 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- {{{ Wibox
--- Create a textclock widget
-mytextclock = awful.widget.textclock()
 
+-- Initialize clock widget
+datewidget = wibox.widget.textbox()
+-- Register clock widget
+vicious.register(datewidget, vicious.widgets.date, "%b %d - %I:%M ", 60)
+-- Calendar
+lain.widgets.calendar:attach(datewidget, { font_size = 9 })
+-- Separator
+separator = wibox.widget.textbox()
+separator:set_text(" :: ")
 -- Create a wibox for each screen and add it
 mywibox = {}
 mypromptbox = {}
@@ -209,18 +224,23 @@ for s = 1, screen.count() do
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
     -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s })
+    mywibox[s] = awful.wibox({ position = "top", height = "18", screen = s })
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
     left_layout:add(mylauncher)
     left_layout:add(mytaglist[s])
     left_layout:add(mypromptbox[s])
+    left_layout:add(separator)
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    if s == 1 then right_layout:add(wibox.widget.systray()) end
-    right_layout:add(mytextclock)
+    right_layout:add(separator)
+    if s == 1 then right_layout:add(wibox.widget.systray())
+                   right_layout:add(separator)
+                   end
+    right_layout:add(datewidget)
+    right_layout:add(separator)
     right_layout:add(mylayoutbox[s])
 
     -- Now bring it all together (with the tasklist in the middle)
@@ -285,12 +305,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
-    awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end),
-    awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end),
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)      end),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)      end),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1)         end),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)         end),
+    awful.key({ modkey,           }, "l",     function () awful.util.spawn("gdmflexiserver") end),
+    
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
 
@@ -314,7 +330,8 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
     awful.key({ modkey, "Shift"   }, "r",      function (c) c:redraw()                       end),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
-    awful.key({ modkey,           }, "n",      function (c) c.minimized = not c.minimized    end),
+    awful.key({ modkey,           }, "b",      function (c) c.below = not c.below            end),
+    awful.key({ modkey,           }, "h",      function (c) c.minimized = not c.minimized    end),
     awful.key({ modkey,           }, "m",
         function (c)
             c.maximized_horizontal = not c.maximized_horizontal
@@ -371,9 +388,12 @@ clientbuttons = awful.util.table.join(
     awful.button({ modkey }, 1, awful.mouse.client.move),
     awful.button({ modkey }, 3, awful.mouse.client.resize),
     awful.button({ modkey, "Shift" }, 1, awful.mouse.client.resize),
-    awful.button({ modkey }, 4, awful.tag.viewnext),
-    awful.button({ modkey }, 5, awful.tag.viewprev))
-
+    awful.button({ modkey }, 4, function ()
+            awful.tag.viewnext()
+        end),
+    awful.button({ modkey }, 5, function ()
+            awful.tag.viewprev()
+        end) )
 -- Set keys
 root.keys(globalkeys)
 -- }}}
@@ -386,28 +406,31 @@ awful.rules.rules = {
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
                      keys = clientkeys,
-                     buttons = clientbuttons } },
-    { rule = { class = "MPlayer" },
+                     buttons = clientbuttons,
+                     switchtotag = true } },
+    { rule = { class = "URxvt" },
+      properties = { size_hints_honor = false } },
+    { rule = { class = "mpv" },
       properties = { floating = true } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
-    { rule = { role  = "conversation" },
-      properties = { floating = true } },
     { rule = { class = "Plugin-container" },
       properties = { floating = true } },
     { rule = { role = "buddy_list" },
-      properties = { tag = tags[1][2], floating = true } },
+      properties = { tag = tags[1][2], floating = true, switchtotag = false } },
     { rule = { class = "Mumble" },
       properties = { tag = tags[1][2] } },
     { rule = { class = "Wine" },
-      properties = {border_width=0,floating=true } },
+      properties = {border_width=0,floating = true } },
     { rule = { name = "Drop" },
       properties = { floating = true } },
-    { rule = { class = "Thunderbird" },
-      properties = { tag = tags[1][6] } },
+    { rule = { class = "Thunderbird" }, except = { instance = "Msgcompose" },
+      properties = { tag = tags[1][6], below = true }},
     { rule = { class = "Skype" },
+      properties = { tag = tags[1][2] } },
+    { rule = { class = "Venom" },
       properties = { tag = tags[1][2] } },
     { rule = { role = "conversation" },
       properties = { tag = tags[1][2], floating = true } },
@@ -426,12 +449,12 @@ client.connect_signal("manage", function (c, startup)
 --            and awful.client.focus.filter(c) then
 --            client.focus = c
 --        end
---`    end)
+--    end)
 
     if not startup then
         -- Set the windows at the slave,
         -- i.e. put it at the end of others instead of setting it master.
-        -- awful.client.setslave(c)
+        awful.client.setslave(c)
 
         -- Put windows in a smart way, only if they does not set an initial position.
         if not c.size_hints.user_position and not c.size_hints.program_position then
