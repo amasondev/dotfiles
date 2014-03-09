@@ -44,12 +44,13 @@ function run_once(cmd)
 end
 
 run_once("urxvtd")
+run_once("xfsettingsd")
 run_once("xfce4-power-manager")
 run_once("compton")
 run_once("pidgin")
 run_once("pasystray")
 run_once("nm-applet")
-run_once("bluetooth-applet")
+run_once("blueman-applet")
 
 -- }}}
 -- {{{ Variable definitions
@@ -125,7 +126,7 @@ myappmenu = {
 
 mymainmenu = awful.menu({ items = { { "Internet", "firefox" },
                                     { "Files", "thunar" },
-                                    { "Mail", "thunderbird" },
+                                    { "Mail", "icedove" },
                                     { "Terminal", terminal },
                                     { "-----------" },
                                     { "Applications", myappmenu },
@@ -426,7 +427,7 @@ awful.rules.rules = {
       properties = {border_width=0,floating = true } },
     { rule = { name = "Drop" },
       properties = { floating = true } },
-    { rule = { class = "Thunderbird" }, except = { instance = "Msgcompose" },
+    { rule = { class = "Icedove" }, except = { instance = "Msgcompose" },
       properties = { tag = tags[1][6], below = true }},
     { rule = { class = "Skype" },
       properties = { tag = tags[1][2] } },
