@@ -1,14 +1,16 @@
 !URxvt.depth: 32
-URxvt.background: #262729
-URxvt.foreground: #ffffcc
+URxvt.background: #000000
+URxvt.foreground: #ffffff
 URxvt.scrollBar: false
 URxvt.font: xft:termsyn:size=9:antialias=false
 URxvt.boldFont: xft:termsyn:bold:size=9:antialias=false
 URxvt.geometry: 65x24
+URxvt.perl-ext-common: default,clipboard
+URxvt.url-select-underline: true
+URxvt.keysym.C-v: perl:clipboard:paste
 
-
-*background: #262729
-*foreground: #ffffcc
+*background: #000000
+*foreground: #ffffff
 !Black
 *color0: #3d3d3d
 *color8: #5c5c5c
