@@ -126,7 +126,7 @@ myappmenu = {
 
 mymainmenu = awful.menu({ items = { { "Internet", "firefox" },
                                     { "Files", "thunar" },
-                                    { "Mail", "icedove" },
+                                    { "Mail", "thunderbird" },
                                     { "Terminal", terminal },
                                     { "-----------" },
                                     { "Applications", myappmenu },
@@ -427,7 +427,7 @@ awful.rules.rules = {
       properties = {border_width=0,floating = true } },
     { rule = { name = "Drop" },
       properties = { floating = true } },
-    { rule = { class = "Icedove" }, except = { instance = "Msgcompose" },
+    { rule = { class = "Thunderbird" }, except = { instance = "Msgcompose" },
       properties = { tag = tags[1][6], below = true }},
     { rule = { class = "Skype" },
       properties = { tag = tags[1][2] } },
