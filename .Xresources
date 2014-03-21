@@ -1,5 +1,5 @@
-!URxvt.depth: 32
-URxvt.background: #000000
+URxvt.depth: 32
+URxvt.background: [80]#000000
 URxvt.foreground: #ffffff
 URxvt.scrollBar: false
 URxvt.font: xft:termsyn:size=9:antialias=false
