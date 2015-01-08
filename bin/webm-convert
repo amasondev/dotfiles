@@ -1,0 +1,11 @@
+#!/bin/bash
+if [ "$1" ]; then
+  read -p "Bitrate? > " br
+  read -p "Max Compression? > " qm
+  read -p "Width? > " wd
+  read -p "Height? > " ht
+  read -p "File name? > " fn
+  ffmpeg -i $1 -threads 8 -c:v libvpx -b:v $br -an -vf scale=$wd:$ht -f webm -quality good -qmax $qm -bufsize 1000k "$fn".webm
+else
+  echo "No file given."
+fi

@@ -43,14 +43,10 @@ function run_once(cmd)
   awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
 end
 
-run_once("urxvtd")
-run_once("xfsettingsd")
-run_once("xfce4-power-manager")
 run_once("compton")
-run_once("pidgin")
 run_once("pasystray")
 run_once("nm-applet")
-run_once("blueman-applet")
+run_once("skype")
 
 -- }}}
 -- {{{ Variable definitions
@@ -60,7 +56,7 @@ beautiful.init(os.getenv("HOME") ..
 "/.config/awesome/themes/adwaita/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvt" or "xterm"
+terminal = "terminator" or "urxvt"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -124,9 +120,9 @@ myappmenu = {
 	{ "OnBoard" , "onboard" }
 }
 
-mymainmenu = awful.menu({ items = { { "Internet", "firefox" },
-                                    { "Files", "thunar" },
-                                    { "Mail", "thunderbird" },
+mymainmenu = awful.menu({ items = { { "Browser", "chromium" },
+                                    { "Files", "pcmanfm" },
+                                    { "Mail", "geary" },
                                     { "Terminal", terminal },
                                     { "-----------" },
                                     { "Applications", myappmenu },
@@ -411,8 +407,6 @@ awful.rules.rules = {
                      switchtotag = true } },
     { rule = { class = "URxvt" },
       properties = { size_hints_honor = false } },
-    { rule = { class = "mpv" },
-      properties = { floating = true } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
@@ -429,12 +423,12 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Thunderbird" }, except = { instance = "Msgcompose" },
       properties = { tag = tags[1][6], below = true }},
-    { rule = { class = "Skype" },
-      properties = { tag = tags[1][2] } },
     { rule = { class = "Venom" },
       properties = { tag = tags[1][2] } },
     { rule = { role = "conversation" },
       properties = { tag = tags[1][2], floating = true } },
+    { rule = { class = "UE4Editor" },
+      properties = { border_width=0,floating = true } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
@@ -460,12 +454,12 @@ client.connect_signal("manage", function (c, startup)
         -- Put windows in a smart way, only if they does not set an initial position.
         if not c.size_hints.user_position and not c.size_hints.program_position then
             awful.placement.under_mouse(c)
-            awful.placement.no_overlap(c)
+            --awful.placement.no_overlap(c)
             awful.placement.no_offscreen(c)
         end
     end
 
-    local titlebars_enabled = false
+    local titlebars_enabled = true
     if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
         -- buttons for the titlebar
         local buttons = awful.util.table.join(

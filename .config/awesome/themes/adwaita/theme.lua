@@ -9,10 +9,10 @@ theme                               = {}
 theme.confdir                       = os.getenv("HOME") .. "/.config/awesome/themes/adwaita"
 theme.wallpaper                     = theme.confdir .. "/wall.png"
 
-theme.font                          = "nu 9"
+theme.font                          = "terminus 9"
 --theme.taglist_font                =
-theme.bg_normal                     = "#000000"
-theme.bg_focus                      = "#3A81CC"
+theme.bg_normal                     = "#131C2E"
+theme.bg_focus                      = "#6D8CC7"
 theme.bg_urgent                     = "#0000ff"
 
 theme.fg_normal                     = "#ffffff"
@@ -32,15 +32,15 @@ theme.fg_blu                        = "#8ebdde"
 
 theme.border_width                  = "1"
 theme.border_normal                 = "#313739"
-theme.border_focus                  = "#3A81CC"
+theme.border_focus                  = "#6D8CC7"
 theme.border_marked                 = "#ff0000"
 
 theme.menu_width                    = "110"
 theme.menu_border_width             = "0"
-theme.menu_fg_normal                = "#313739"
+theme.menu_fg_normal                = "#6D8CC7"
 theme.menu_fg_focus                 = "#ffffff"
 theme.menu_bg_normal                = "#ffffff"
-theme.menu_bg_focus                 = "#3A81CC"
+theme.menu_bg_focus                 = "#6D8CC7"
 
 theme.menu_submenu_icon             = theme.confdir .. "/icons/submenu.png"
 theme.widget_temp                   = theme.confdir .. "/icons/temp.png"

@@ -4,7 +4,7 @@ URxvt.foreground: #ffffff
 URxvt.scrollBar: false
 URxvt.font: xft:termsyn:size=9:antialias=false
 URxvt.boldFont: xft:termsyn:bold:size=9:antialias=false
-URxvt.geometry: 65x24
+URxvt.geometry: 80x24
 URxvt.perl-ext-common: default,clipboard
 URxvt.url-select-underline: true
 URxvt.keysym.C-v: perl:clipboard:paste
