@@ -1,0 +1,3 @@
+#!/bin/bash
+screen livestreamer twitch.tv/$1 best
+chromium --app="http://www.twitch.tv/$1/chat?popout="
