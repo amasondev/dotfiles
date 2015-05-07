@@ -7,7 +7,7 @@
 theme                               = {}
 
 theme.confdir                       = os.getenv("HOME") .. "/.config/awesome/themes/adwaita"
-theme.wallpaper                     = theme.confdir .. "/wall.png"
+theme.wallpaper                     = theme.confdir .. "/wall"
 
 theme.font                          = "terminus 9"
 --theme.taglist_font                =
@@ -19,6 +19,9 @@ theme.fg_normal                     = "#ffffff"
 theme.fg_focus                      = "#ffffff"
 theme.fg_urgent                     = "#ffffff"
 theme.fg_minimize                   = "#ffffff"
+
+theme.tasklist_bg_normal            = "#394f77"
+theme.tasklist_bg_minimize          = "#555555"
 
 theme.fg_black                      = "#424242"
 theme.fg_red                        = "#ce5666"
@@ -36,7 +39,8 @@ theme.border_focus                  = "#6D8CC7"
 theme.border_marked                 = "#ff0000"
 
 theme.menu_width                    = "110"
-theme.menu_border_width             = "0"
+theme.menu_border_width             = "1"
+theme.menu_border_color             = "#6D8CC7"
 theme.menu_fg_normal                = "#6D8CC7"
 theme.menu_fg_focus                 = "#ffffff"
 theme.menu_bg_normal                = "#ffffff"
@@ -59,10 +63,33 @@ theme.widget_batt                   = theme.confdir .. "/icons/bat.png"
 theme.widget_clock                  = theme.confdir .. "/icons/clock.png"
 theme.widget_vol                    = theme.confdir .. "/icons/spkr.png"
 
+theme.titlebar_close_button_focus               = theme.confdir .. "/icons/titlebar/close_focus.png"
+theme.titlebar_close_button_normal              = theme.confdir .. "/icons/titlebar/close_normal.png"
+
+theme.titlebar_ontop_button_focus_active        = theme.confdir .. "/icons/titlebar/ontop_focus_active.png"
+theme.titlebar_ontop_button_normal_active       = theme.confdir .. "/icons/titlebar/ontop_normal_active.png"
+theme.titlebar_ontop_button_focus_inactive      = theme.confdir .. "/icons/titlebar/ontop_focus_inactive.png"
+theme.titlebar_ontop_button_normal_inactive     = theme.confdir .. "/icons/titlebar/ontop_normal_inactive.png"
+
+theme.titlebar_sticky_button_focus_active       = theme.confdir .. "/icons/titlebar/sticky_focus_active.png"
+theme.titlebar_sticky_button_normal_active      = theme.confdir .. "/icons/titlebar/sticky_normal_active.png"
+theme.titlebar_sticky_button_focus_inactive     = theme.confdir .. "/icons/titlebar/sticky_focus_inactive.png"
+theme.titlebar_sticky_button_normal_inactive    = theme.confdir .. "/icons/titlebar/sticky_normal_inactive.png"
+
+theme.titlebar_floating_button_focus_active     = theme.confdir .. "/icons/titlebar/floating_focus_active.png"
+theme.titlebar_floating_button_normal_active    = theme.confdir .. "/icons/titlebar/floating_normal_active.png"
+theme.titlebar_floating_button_focus_inactive   = theme.confdir .. "/icons/titlebar/floating_focus_inactive.png"
+theme.titlebar_floating_button_normal_inactive  = theme.confdir .. "/icons/titlebar/floating_normal_inactive.png"
+
+theme.titlebar_maximized_button_focus_active    = theme.confdir .. "/icons/titlebar/maximized_focus_active.png"
+theme.titlebar_maximized_button_normal_active   = theme.confdir .. "/icons/titlebar/maximized_normal_active.png"
+theme.titlebar_maximized_button_focus_inactive  = theme.confdir .. "/icons/titlebar/maximized_focus_inactive.png"
+theme.titlebar_maximized_button_normal_inactive = theme.confdir .. "/icons/titlebar/maximized_normal_inactive.png"
+
 theme.taglist_squares_sel           = theme.confdir .. "/icons/square_a.png"
 theme.taglist_squares_unsel         = theme.confdir .. "/icons/square_b.png"
 
-theme.tasklist_disable_icon         = true
+theme.tasklist_disable_icon         = false
 theme.tasklist_floating             = ""
 theme.tasklist_maximized_horizontal = ""
 theme.tasklist_maximized_vertical   = ""

@@ -8,6 +8,8 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 local vicious = require("vicious")
 local lain = require("lain")
+local html = require("html")
+local applications = require("applications")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -33,6 +35,7 @@ do
     end)
 end
 -- }}}
+
 -- {{{ Autostart applications
 function run_once(cmd)
   findme = cmd
@@ -43,22 +46,18 @@ function run_once(cmd)
   awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
 end
 
-run_once("compton")
-run_once("pasystray")
-run_once("nm-applet")
-run_once("skype")
+for i, command in ipairs(autorun) do
+	run_once(command)
+end
 
 -- }}}
+
 -- {{{ Variable definitions
 
 -- beautiful init
 beautiful.init(os.getenv("HOME") .. 
 "/.config/awesome/themes/adwaita/theme.lua")
 
--- This is used later as the default terminal and editor to run.
-terminal = "terminator" or "urxvt"
-editor = os.getenv("EDITOR") or "nano"
-editor_cmd = terminal .. " -e " .. editor
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -107,22 +106,11 @@ end
 
 -- {{{ Menu
 -- Create a laucher widget and a main menu
-myappmenu = {
-	{ "DeadBeef" , "deadbeef" },
-	{ "Eclipse" , "eclipse" },
-	{ "Gimp" , "gimp" },
-	{ "LibreOffice" , "libreoffice" },
-	{ "PlayOnLinux" , "playonlinux" },
-        { "Steam" , "steam" },
-	{ "Skype" , "skype" },
-	{ "Transmission" , "transmission-gtk" },
-	{ "VirtualBox" , "virtualbox" },
-	{ "OnBoard" , "onboard" }
-}
 
-mymainmenu = awful.menu({ items = { { "Browser", "chromium" },
-                                    { "Files", "pcmanfm" },
-                                    { "Mail", "geary" },
+
+mymainmenu = awful.menu({ items = { { "Browser", browser },
+                                    { "Files", filemanager },
+                                    { "Mail", mailclient },
                                     { "Terminal", terminal },
                                     { "-----------" },
                                     { "Applications", myappmenu },
@@ -221,7 +209,7 @@ for s = 1, screen.count() do
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
     -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "top", height = "18", screen = s })
+    mywibox[s] = awful.wibox({ position = "top", height = "16", screen = s })
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
@@ -302,7 +290,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
-    awful.key({ modkey,           }, "l",     function () awful.util.spawn("gdmflexiserver") end),
+    awful.key({ modkey,           }, "l",     function () awful.util.spawn("xflock4") end),
     
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
@@ -322,7 +310,8 @@ globalkeys = awful.util.table.join(
 clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey,           }, "w",      function (c) c:kill()                         end),
-    awful.key({ modkey,           }, "s",      awful.client.floating.toggle                     ),
+    awful.key({ modkey,           }, "s",      awful.titlebar.toggle                            ),
+    awful.key({ modkey,           }, "d",      awful.client.floating.toggle                     ),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
     awful.key({ modkey, "Shift"   }, "r",      function (c) c:redraw()                       end),
@@ -429,6 +418,8 @@ awful.rules.rules = {
       properties = { tag = tags[1][2], floating = true } },
     { rule = { class = "UE4Editor" },
       properties = { border_width=0,floating = true } },
+    { rule = { class = "Pqiv" },
+      properties = { border_width=0 } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
@@ -439,12 +430,12 @@ awful.rules.rules = {
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function (c, startup)
     -- Enable sloppy focus
---    c:connect_signal("mouse::enter", function(c)
---        if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
---            and awful.client.focus.filter(c) then
---            client.focus = c
---        end
---    end)
+    c:connect_signal("mouse::enter", function(c)
+        if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
+            and awful.client.focus.filter(c) then
+            client.focus = c
+        end
+    end)
 
     if not startup then
         -- Set the windows at the slave,
@@ -453,7 +444,8 @@ client.connect_signal("manage", function (c, startup)
 
         -- Put windows in a smart way, only if they does not set an initial position.
         if not c.size_hints.user_position and not c.size_hints.program_position then
-            awful.placement.under_mouse(c)
+            --awful.placement.under_mouse(c)
+            awful.placement.centered(c)
             --awful.placement.no_overlap(c)
             awful.placement.no_offscreen(c)
         end
@@ -483,9 +475,9 @@ client.connect_signal("manage", function (c, startup)
         -- Widgets that are aligned to the right
         local right_layout = wibox.layout.fixed.horizontal()
         right_layout:add(awful.titlebar.widget.floatingbutton(c))
-        right_layout:add(awful.titlebar.widget.maximizedbutton(c))
         right_layout:add(awful.titlebar.widget.stickybutton(c))
         right_layout:add(awful.titlebar.widget.ontopbutton(c))
+        right_layout:add(awful.titlebar.widget.maximizedbutton(c))
         right_layout:add(awful.titlebar.widget.closebutton(c))
 
         -- The title goes in the middle
@@ -501,10 +493,20 @@ client.connect_signal("manage", function (c, startup)
         layout:set_right(right_layout)
         layout:set_middle(middle_layout)
 
-        awful.titlebar(c):set_widget(layout)
+        awful.titlebar(c, {size = "16"}):set_widget(layout)
     end
 end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+
+--- Strips out HTML ---
+naughty.config.notify_callback = function(args)
+	if(args.icon) == "gtk-dialog-info" then
+		args.text = HTML_ToText(args.text)
+	elseif(args.icon) == "gtk-edit" then
+		args.text = HTML_ToText(args.text)
+	end
+	return args
+end
 -- }}}
