@@ -11,6 +11,13 @@ myappmenu = {
 	{ "VirtualBox" , "virtualbox" },
 }
 
+settingsmenu = {
+        { "Appearance" , "lxappearance" },
+        { "Awesome" , "mousepad .config/awesome/rc.lua" },
+        { "Disks" , "gksu gparted" },
+        { "Network" , "nm-connection-editor" },
+}
+
 browser = "chromium"
 filemanager = "thunar"
 mailclient = "geary"

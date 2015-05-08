@@ -114,6 +114,7 @@ mymainmenu = awful.menu({ items = { { "Browser", browser },
                                     { "Terminal", terminal },
                                     { "-----------" },
                                     { "Applications", myappmenu },
+                                    { "Settings", settingsmenu },
                                     { "-----------" },
                                     { "Restart" , awesome.restart },
                                     { "Log Out" , awesome.quit }
