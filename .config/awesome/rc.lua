@@ -107,6 +107,10 @@ end
 -- {{{ Menu
 -- Create a laucher widget and a main menu
 
+powermenu = {
+          { "Reboot" , "systemctl reboot" },
+          { "Shut Down", "systemctl poweroff" },
+}
 
 mymainmenu = awful.menu({ items = { { "Browser", browser },
                                     { "Files", filemanager },
@@ -116,7 +120,9 @@ mymainmenu = awful.menu({ items = { { "Browser", browser },
                                     { "Applications", myappmenu },
                                     { "Settings", settingsmenu },
                                     { "-----------" },
-                                    { "Restart" , awesome.restart },
+                                    { "Reload" , awesome.restart },
+                                    { "Lock Screen" , "dm-tool lock" },
+                                    { "Power" , powermenu },
                                     { "Log Out" , awesome.quit }
                                   }
                         })
