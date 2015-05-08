@@ -277,6 +277,10 @@ globalkeys = awful.util.table.join(
     awful.key({"Shift" }, "Print", function () awful.util.spawn("xfce4-screenshooter -w") end),
     awful.key({"Mod1"  }, "Print", function () awful.util.spawn("xfce4-screenshooter -r") end),
 
+    -- Launch Applications
+    awful.key({ modkey,           }, "e",      function () awful.util.spawn(filemanager)  end),
+    awful.key({ modkey,           }, "b",      function () awful.util.spawn(browser)      end),
+
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
@@ -323,7 +327,6 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
     awful.key({ modkey, "Shift"   }, "r",      function (c) c:redraw()                       end),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
-    awful.key({ modkey,           }, "b",      function (c) c.below = not c.below            end),
     awful.key({ modkey,           }, "h",      function (c) c.minimized = not c.minimized    end),
     awful.key({ modkey,           }, "m",
         function (c)
