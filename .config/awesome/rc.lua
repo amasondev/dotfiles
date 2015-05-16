@@ -95,8 +95,8 @@ end
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
 tags = {
-	names = { "main" , "chat" , "dev" , "media" , "misc" , "mail" },
-	layout = { layouts[1], layouts[1], layouts[2], layouts[1], layouts[1], layouts[1] }
+	names = { "main" , "chat" , "files", "dev" , "media" , "misc" , "mail" },
+	layout = { layouts[1], layouts[1], layouts[1], layouts[2], layouts[1], layouts[1], layouts[1] }
 }
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
@@ -155,8 +155,8 @@ mytaglist.buttons = awful.util.table.join(
                     awful.button({ modkey }, 1, awful.client.movetotag),
                     awful.button({ }, 3, awful.tag.viewtoggle),
                     awful.button({ modkey }, 3, awful.client.toggletag),
-                    awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
-                    awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)
+                    awful.button({ }, 4, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end),
+                    awful.button({ }, 5, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end)
                     )
 mytasklist = {}
 mytasklist.buttons = awful.util.table.join(
@@ -417,11 +417,11 @@ awful.rules.rules = {
     { rule = { class = "Mumble" },
       properties = { tag = tags[1][2] } },
     { rule = { class = "Wine" },
-      properties = {border_width=0,floating = true } },
+      properties = { border_width = 0, floating = true } },
     { rule = { name = "Drop" },
       properties = { floating = true } },
-    { rule = { class = "Thunderbird" }, except = { instance = "Msgcompose" },
-      properties = { tag = tags[1][6], below = true }},
+    { rule = { class = "Geary" }, except = { instance = "Msgcompose" },
+      properties = { tag = tags[1][7], below = true }},
     { rule = { class = "Venom" },
       properties = { tag = tags[1][2] } },
     { rule = { role = "conversation" },
@@ -446,20 +446,6 @@ client.connect_signal("manage", function (c, startup)
             client.focus = c
         end
     end)
-
-    if not startup then
-        -- Set the windows at the slave,
-        -- i.e. put it at the end of others instead of setting it master.
-        awful.client.setslave(c)
-
-        -- Put windows in a smart way, only if they does not set an initial position.
-        if not c.size_hints.user_position and not c.size_hints.program_position then
-            --awful.placement.under_mouse(c)
-            awful.placement.centered(c)
-            --awful.placement.no_overlap(c)
-            awful.placement.no_offscreen(c)
-        end
-    end
 
     local titlebars_enabled = true
     if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
@@ -505,6 +491,25 @@ client.connect_signal("manage", function (c, startup)
 
         awful.titlebar(c, {size = "16"}):set_widget(layout)
     end
+
+    if not startup then
+        -- Set the windows at the slave,
+        -- i.e. put it at the end of others instead of setting it master.
+        awful.client.setslave(c)
+        
+        -- Put windows in a smart way, only if they does not set an initial position.
+        if not c.size_hints.user_position and not c.size_hints.program_position then
+            --awful.placement.under_mouse(c)
+            awful.placement.centered(c)
+            
+            if c.type == "normal" then
+              awful.placement.no_overlap(c)
+            end
+            
+        end
+        
+    end
+    awful.placement.no_offscreen(c)
 end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
