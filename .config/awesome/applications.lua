@@ -1,35 +1,36 @@
 myappmenu = {
 	{ "DeadBeef" , "deadbeef" },
 	{ "Gimp" , "gimp" },
-	{ "LibreOffice" , "libreoffice" },
 	{ "Mumble" , "mumble" },
-	{ "Monodevelop" , "monodevelop --no-redirect" },
-	{ "PlayOnLinux" , "playonlinux" },
-        { "Steam" , "steam" },
+	{ "PlayOnLinux", "playonlinux" },
 	{ "Skype" , "skype" },
 	{ "Transmission" , "transmission-gtk" },
 	{ "VirtualBox" , "virtualbox" },
+	{ "World of Warcraft", "playonlinux --run WoW" },
 }
 
 settingsmenu = {
         { "Appearance" , "lxappearance" },
-        { "Awesome" , "mousepad .config/awesome/rc.lua" },
-        { "Disks" , "gksu gparted" },
+        { "Awesome" , "xdg-open .config/awesome/rc.lua" },
+	{ "Disks" , "gksu gparted" },
+        { "Edit Applications" , "xdg-open .config/awesome/applications.lua" },
         { "Network" , "nm-connection-editor" },
+	{ "Sound" , "pavucontrol" },
+	{ "Task Manager", "xfce4-taskmanager" },
 }
 
 browser = "chromium"
 filemanager = "thunar"
-mailclient = "geary"
-terminal = "terminator" or "urxvt"
+mailclient = "chromium --app='https://gmail.com/'"
+terminal = "urxvt" or "terminator"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
 autorun = {
 	"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1",
-	"compton",
-	"pasystray",
+	"rm ~/.config/pulse/*stream-volumes.tdb",
+	"compton -b",
 	"nm-applet",
-	"skype",
-	"xscreensaver -no-splash",
+	"pasystray",
+	"skype",        
 }

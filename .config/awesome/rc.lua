@@ -46,9 +46,6 @@ function run_once(cmd)
   awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
 end
 
-for i, command in ipairs(autorun) do
-	run_once(command)
-end
 
 -- }}}
 
@@ -95,8 +92,8 @@ end
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
 tags = {
-	names = { "main" , "chat" , "files", "dev" , "media" , "misc" , "mail" },
-	layout = { layouts[1], layouts[1], layouts[1], layouts[2], layouts[1], layouts[1], layouts[1] }
+	names = { "main" , "chat" , "files", "media" , "dev" , "mail" , "misc" },
+	layout = { layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1] }
 }
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
@@ -322,6 +319,7 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey,           }, "w",      function (c) c:kill()                         end),
     awful.key({ modkey,           }, "s",      awful.titlebar.toggle                            ),
+    awful.key({ modkey,           }, "a",      function (c) c.size_hints_honor = not c.size_hints_honor end),
     awful.key({ modkey,           }, "d",      awful.client.floating.toggle                     ),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
@@ -525,3 +523,8 @@ naughty.config.notify_callback = function(args)
 	return args
 end
 -- }}}
+
+for i, command in ipairs(autorun) do
+        run_once(command)
+end
+
