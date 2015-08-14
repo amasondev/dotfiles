@@ -11,6 +11,7 @@ local lain = require("lain")
 local html = require("html")
 local applications = require("applications")
 
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -118,7 +119,7 @@ mymainmenu = awful.menu({ items = { { "Browser", browser },
                                     { "Settings", settingsmenu },
                                     { "-----------" },
                                     { "Reload" , awesome.restart },
-                                    { "Lock Screen" , "dm-tool lock" },
+                                    { "Lock Screen" , lock_cmd },
                                     { "Power" , powermenu },
                                     { "Log Out" , awesome.quit }
                                   }
@@ -132,6 +133,48 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- {{{ Wibox
+local awesompd = require("awesompd/awesompd")
+  musicwidget = awesompd:create() -- Create awesompd widget
+  musicwidget.font = "GohuFont" -- Set widget font 
+  musicwidget.scrolling = true -- If true, the text in the widget will be scrolled
+  musicwidget.output_size = 30 -- Set the size of widget in symbols
+  musicwidget.update_interval = 10 -- Set the update interval in seconds
+  -- Set the folder where icons are located (change username to your login name)
+  musicwidget.path_to_icons = "/home/alex/.config/awesome/awesompd/icons" 
+  -- Set the default music format for Jamendo streams. You can change
+  -- this option on the fly in awesompd itself.
+  -- possible formats: awesompd.FORMAT_MP3, awesompd.FORMAT_OGG
+  musicwidget.jamendo_format = awesompd.FORMAT_MP3
+  -- If true, song notifications for Jamendo tracks and local tracks will also contain
+  -- album cover image.
+  musicwidget.show_album_cover = true
+  -- Specify how big in pixels should an album cover be. Maximum value
+  -- is 100.
+  musicwidget.album_cover_size = 50
+  -- This option is necessary if you want the album covers to be shown
+  -- for your local tracks.
+  musicwidget.mpd_config = "/home/alex/.config/mpd/mpd.conf"
+  -- Specify the browser you use so awesompd can open links from
+  -- Jamendo in it.
+  musicwidget.browser = "firefox"
+  -- Specify decorators on the left and the right side of the
+  -- widget. Or just leave empty strings if you decorate the widget
+  -- from outside.
+  musicwidget.ldecorator = " "
+  musicwidget.rdecorator = " "
+  -- Set all the servers to work with (here can be any servers you use)
+  musicwidget.servers = {
+     { server = "localhost",
+          port = 6600 }}
+  -- Set the buttons of the widget
+  musicwidget:register_buttons({ { "", awesompd.MOUSE_LEFT, musicwidget:command_playpause() },
+      			         { "Control", awesompd.MOUSE_SCROLL_UP, musicwidget:command_prev_track() },
+ 			         { "Control", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_next_track() },
+ 			         { "", awesompd.MOUSE_SCROLL_UP, musicwidget:command_volume_up() },
+ 			         { "", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_volume_down() },
+ 			         { "", awesompd.MOUSE_RIGHT, musicwidget:command_show_menu() },
+                                 { modkey, "Pause", musicwidget:command_playpause() } })
+  musicwidget:run() -- After all configuration is done, run the widget
 
 -- Initialize clock widget
 datewidget = wibox.widget.textbox()
@@ -141,7 +184,7 @@ vicious.register(datewidget, vicious.widgets.date, "%b %d - %I:%M ", 60)
 lain.widgets.calendar:attach(datewidget, { font_size = 9 })
 -- Separator
 separator = wibox.widget.textbox()
-separator:set_text(" :: ")
+separator:set_text(" || ")
 -- Create a wibox for each screen and add it
 mywibox = {}
 mypromptbox = {}
@@ -225,7 +268,10 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     right_layout:add(separator)
-    if s == 1 then right_layout:add(wibox.widget.systray())
+    if s == 1 then 
+                   right_layout:add(musicwidget.widget)
+                   right_layout:add(separator)
+                   right_layout:add(wibox.widget.systray())
                    right_layout:add(separator)
                    end
     right_layout:add(datewidget)
@@ -298,7 +344,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
-    awful.key({ modkey,           }, "l",     function () awful.util.spawn("dm-tool lock") end),
+    awful.key({ modkey,           }, "l",     function () awful.util.spawn(lock_cmd) end),
     
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
@@ -325,6 +371,7 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
     awful.key({ modkey, "Shift"   }, "r",      function (c) c:redraw()                       end),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
+    awful.key({ modkey,           }, "y",      function (c) c.below = not c.below            end),
     awful.key({ modkey,           }, "h",      function (c) c.minimized = not c.minimized    end),
     awful.key({ modkey,           }, "m",
         function (c)
@@ -411,19 +458,17 @@ awful.rules.rules = {
     { rule = { class = "Plugin-container" },
       properties = { floating = true } },
     { rule = { role = "buddy_list" },
-      properties = { tag = tags[1][2], floating = true, switchtotag = false } },
-    { rule = { class = "Mumble" },
-      properties = { tag = tags[1][2] } },
+      properties = { floating = true, switchtotag = false } },
     { rule = { class = "Wine" },
       properties = { border_width = 0, floating = true } },
     { rule = { name = "Drop" },
       properties = { floating = true } },
     { rule = { class = "Geary" }, except = { instance = "Msgcompose" },
-      properties = { tag = tags[1][7], below = true }},
+      properties = { below = true }},
     { rule = { class = "Venom" },
       properties = { tag = tags[1][2] } },
     { rule = { role = "conversation" },
-      properties = { tag = tags[1][2], floating = true } },
+      properties = { floating = true } },
     { rule = { class = "UE4Editor" },
       properties = { border_width=0,floating = true } },
     { rule = { class = "Pqiv" },
@@ -438,14 +483,14 @@ awful.rules.rules = {
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function (c, startup)
     -- Enable sloppy focus
-    c:connect_signal("mouse::enter", function(c)
-        if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-            and awful.client.focus.filter(c) then
-            client.focus = c
-        end
-    end)
+--    c:connect_signal("mouse::enter", function(c)
+--      if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
+--          and awful.client.focus.filter(c) then
+--          client.focus = c
+--      end
+--  end)
 
-    local titlebars_enabled = true
+    local titlebars_enabled = false
     if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
         -- buttons for the titlebar
         local buttons = awful.util.table.join(

@@ -1,13 +1,20 @@
 --[[
                                       
-     Judgement Theme     
+     Adwaita Theme     
 --]]
-
+local awful = require("awful")
 
 theme                               = {}
 
 theme.confdir                       = os.getenv("HOME") .. "/.config/awesome/themes/adwaita"
-theme.wallpaper                     = theme.confdir .. "/wall"
+
+wall                                = os.getenv("HOME") .. "/.wallpaper"
+
+if not awful.util.file_readable(wall) then
+    wall                            = theme.confdir .. "/wall"
+end
+
+theme.wallpaper                     = wall
 
 theme.font                          = "gohufont 9"
 --theme.taglist_font                =
