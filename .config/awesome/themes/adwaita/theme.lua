@@ -54,7 +54,7 @@ theme.menu_bg_normal                = "#ffffff"
 theme.menu_bg_focus                 = "#6D8CC7"
 
 -- theme.bg_systray                    = "#394f77"
-theme.systray_icon_spacing          = "6"
+theme.systray_icon_spacing          = 6
 
 theme.menu_submenu_icon             = theme.confdir .. "/icons/submenu.png"
 theme.widget_temp                   = theme.confdir .. "/icons/temp.png"

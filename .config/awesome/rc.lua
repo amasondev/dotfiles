@@ -238,6 +238,8 @@ mytasklist.buttons = awful.util.table.join(
                                               if client.focus then client.focus:raise() end
                                           end))
 
+
+
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
     mypromptbox[s] = awful.widget.prompt()
@@ -256,7 +258,7 @@ for s = 1, screen.count() do
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
     -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "top", height = "18", screen = s })
+    mywibox[s] = awful.wibox({ position = "top", height = "22", screen = s })
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
@@ -269,9 +271,15 @@ for s = 1, screen.count() do
     local right_layout = wibox.layout.fixed.horizontal()
     right_layout:add(separator)
     if s == 1 then 
+                   -- Container for systray
+                   local systray = wibox.widget.systray()
+                   local container = wibox.layout.margin()
+                   container:set_margins(3)
+                   container:set_widget(systray)
+                   
                    right_layout:add(musicwidget.widget)
                    right_layout:add(separator)
-                   right_layout:add(wibox.widget.systray())
+                   right_layout:add(container)
                    right_layout:add(separator)
                    end
     right_layout:add(datewidget)
