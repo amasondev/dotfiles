@@ -3,7 +3,7 @@
 
 browser = "firefox"
 filemanager = "pcmanfm"
-mailclient = "chromium --app='https://gmail.com/'"
+mailclient = "thunderbird"
 terminal = "urxvt" or "terminator"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
@@ -30,6 +30,7 @@ settingsmenu = {
         { "Edit Applications" , "xdg-open .config/awesome/applications.lua" },
 	{ "Login Screen", "gksu lightdm-gtk-greeter-settings" },
         { "Network" , "nm-connection-editor" },
+	{ "NVIDIA Settings", "nvidia-settings" },
 	{ "Screensaver" , "xscreensaver-demo" },
 	{ "Sound" , "pavucontrol" },
 	{ "System Update", terminal .. " -e bash -c 'yaourt -Syua; echo Done.; sleep 2' " },

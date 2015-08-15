@@ -160,8 +160,8 @@ local awesompd = require("awesompd/awesompd")
   -- Specify decorators on the left and the right side of the
   -- widget. Or just leave empty strings if you decorate the widget
   -- from outside.
-  musicwidget.ldecorator = " "
-  musicwidget.rdecorator = " "
+  musicwidget.ldecorator = "♬ "
+  musicwidget.rdecorator = " ♬"
   -- Set all the servers to work with (here can be any servers you use)
   musicwidget.servers = {
      { server = "localhost",
@@ -218,8 +218,11 @@ mytasklist.buttons = awful.util.table.join(
                                                   mymainmenu:hide()
                                               end
                                           end),
+                     awful.button({ modkey }, 1, function (c)
+                                              awful.client.setmaster(c)
+                                          end),
                      awful.button({}, 2, function (c)
-                                               c:kill()
+                                              c:kill()
                                          end),
                      awful.button({ }, 3, function ()
                                               if instance then
@@ -242,7 +245,7 @@ mytasklist.buttons = awful.util.table.join(
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
-    mypromptbox[s] = awful.widget.prompt()
+    mypromptbox[s] = awful.widget.prompt({ prompt = " ▶ Run: " })
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     mylayoutbox[s] = awful.widget.layoutbox(s)
@@ -362,7 +365,7 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey }, "x",
               function ()
-                  awful.prompt.run({ prompt = "Run Lua code: " },
+                  awful.prompt.run({ prompt = " ▶ Run Lua code: " },
                   mypromptbox[mouse.screen].widget,
                   awful.util.eval, nil,
                   awful.util.getdir("cache") .. "/history_eval")
@@ -381,6 +384,8 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
     awful.key({ modkey,           }, "y",      function (c) c.below = not c.below            end),
     awful.key({ modkey,           }, "h",      function (c) c.minimized = not c.minimized    end),
+    awful.key({ modkey,           }, "-",      function (c) c.opacity = c.opacity - 0.2      end),
+    awful.key({ modkey,           }, "=",      function (c) c.opacity = c.opacity + 0.2      end),
     awful.key({ modkey,           }, "m",
         function (c)
             c.maximized_horizontal = not c.maximized_horizontal
@@ -468,7 +473,7 @@ awful.rules.rules = {
     { rule = { role = "buddy_list" },
       properties = { floating = true, switchtotag = false } },
     { rule = { class = "Wine" },
-      properties = { border_width = 0, floating = true } },
+      properties = { floating = true } },
     { rule = { name = "Drop" },
       properties = { floating = true } },
     { rule = { class = "Geary" }, except = { instance = "Msgcompose" },
@@ -498,6 +503,8 @@ client.connect_signal("manage", function (c, startup)
 --      end
 --  end)
 
+
+    -- {{{ Title Bars
     local titlebars_enabled = false
     if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
         -- buttons for the titlebar
@@ -543,10 +550,26 @@ client.connect_signal("manage", function (c, startup)
         awful.titlebar(c, {size = "16"}):set_widget(layout)
     end
 
+    -- {{ Placement
     if not startup then
         -- Set the windows at the slave,
         -- i.e. put it at the end of others instead of setting it master.
-        awful.client.setslave(c)
+        --awful.client.setslave(c)
+        
+        -- Clients spawned by processes
+        for k,o in pairs(client.get()) do
+            if c.window ~= o.window and c.group_window == o.group_window then
+                c.screen = o.screen
+                c:tags(o:tags())
+                break
+            end
+        end
+        
+        -- Transient clients
+        if c.transient_for then
+            c.screen = c.transient_for.screen
+            c:tags(c.transient_for:tags())
+        end
         
         -- Put windows in a smart way, only if they does not set an initial position.
         if not c.size_hints.user_position and not c.size_hints.program_position then
@@ -556,9 +579,7 @@ client.connect_signal("manage", function (c, startup)
             if c.type == "normal" then
               awful.placement.no_overlap(c)
             end
-            
         end
-        
     end
     awful.placement.no_offscreen(c)
 end)
