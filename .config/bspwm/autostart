@@ -1,0 +1,8 @@
+#!/bin/bash
+
+rm -f ~/.config/pulse/*stream-volumes* &
+compton &
+pasystray &
+nm-applet &
+xscreensaver -no-splash &
+xfce4-notifyd &

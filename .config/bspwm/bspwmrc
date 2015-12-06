@@ -1,0 +1,33 @@
+#! /bin/sh
+
+PATH="$PATH:$HOME/.config/bspwm/panel:$HOME/.config/bspwm/panel/sutils"
+export THEME="$HOME/.config/bspwm/current.theme"
+
+# Wallpaper
+feh --bg-fill ~/.wallpaper
+
+# Theme
+. "$THEME"
+
+bspc config borderless_monocle  true
+#bspc config gapless_monocle     true
+bspc config focus_by_distance   true
+
+for monitor in $(bspc query -M); do
+  bspc monitor $monitor -d I II III IV
+done
+
+bspc rule -a xfce4-panel floating=on
+bspc rule -a Gimp follow=on floating=on
+#bspc rule -a Chromium desktop=^2
+bspc rule -a mpv floating=on
+bspc rule -a mumble floating=on
+#bspc rule -a Skype pseudo_tiled=on
+bspc rule -a pqiv border=off
+#bspc rule -a mplayer2 floating=on
+#bspc rule -a Kupfer.py focus=on
+#bspc rule -a Screenkey manage=off
+
+#tint2 &
+xfce4-panel --disable-wm-check &
+~/.config/bspwm/autostart &

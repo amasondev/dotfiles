@@ -1,0 +1,41 @@
+# Bspwm
+bspc config					border_width		1
+bspc config	-m ^1		top_padding			22
+bspc config	-m ^1		bottom_padding	22
+bspc config					window_gap			16
+bspc config					split_ratio			0.5
+
+bspc config		normal_border_color						"#111111"
+bspc config		focused_border_color					"#9756B1"
+bspc config		active_border_color						"#7D6893"
+bspc config		presel_border_color						"#F0CE58"
+bspc config		urgent_border_color						"#6BE380"
+bspc config		focused_locked_border_color		"#FFFFFF"
+
+# Theme
+COLOR_FOREGROUND='#FFA3A6AB'
+COLOR_BACKGROUND='#FF34322E'
+COLOR_ACTIVE_MONITOR_FG='#FF34322E'
+COLOR_ACTIVE_MONITOR_BG='#FF58C5F1'
+COLOR_INACTIVE_MONITOR_FG='#FF58C5F1'
+COLOR_INACTIVE_MONITOR_BG='#FF34322E'
+COLOR_FOCUSED_OCCUPIED_FG='#FFF6F9FF'
+COLOR_FOCUSED_OCCUPIED_BG='#FF5C5955'
+COLOR_FOCUSED_FREE_FG='#FFF6F9FF'
+COLOR_FOCUSED_FREE_BG='#FF6D561C'
+COLOR_FOCUSED_URGENT_FG='#FF34322E'
+COLOR_FOCUSED_URGENT_BG='#FFF9A299'
+COLOR_OCCUPIED_FG='#FFA3A6AB'
+COLOR_OCCUPIED_BG='#FF34322E'
+COLOR_FREE_FG='#FF6F7277'
+COLOR_FREE_BG='#FF34322E'
+COLOR_URGENT_FG='#FFF9A299'
+COLOR_URGENT_BG='#FF34322E'
+COLOR_LAYOUT_FG='#FFA3A6AB'
+COLOR_LAYOUT_BG='#FF34322E'
+COLOR_TITLE_FG='#FFA3A6AB'
+COLOR_TITLE_BG='#FF34322E'
+COLOR_STATUS_FG='#FFA3A6AB'
+COLOR_STATUS_BG='#FF34322E'
+PANEL_HEIGHT=22
+PANEL_FONT_FAMILY="Tahoma:size=10"

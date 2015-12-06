@@ -1,0 +1,116 @@
+j
+# bspwm hotkeys
+#
+
+super + alt + Escape
+	bspc quit
+
+super + w
+	bspc window -c
+
+super + h
+	bspc window -t private
+
+super + t
+	bspc desktop -t floating
+
+super + p
+	bspc window -t pseudo_tiled
+
+super + b
+	bspc desktop -B
+
+super + {s,f}
+	bspc window -t {floating,fullscreen}
+
+super + {grave,Tab}
+	bspc {window,desktop} -f last
+
+alt + {_,shift + }Tab
+	bspc window -f {prev,next}
+
+super + apostrophe
+	bspc window -s last
+
+super + {_,shift + } o
+	bspc {window -m next, desktop -s $(bspc query -M -m next):focused && bspc monitor -f next}
+
+super + End
+	bspc window -w last
+
+super + BackSpace
+	bspc desktop -c
+
+super + m
+	bspc desktop -l next
+
+super + {_,shift + }{Left,Down,Up,Right}
+	bspc window -{f,s} {left,down,up,right}
+
+super + {_,shift + }c
+	bspc window -f {next,prev}
+
+super + {comma,period}
+	bspc desktop -C {backward,forward}
+	
+super + r
+  bspc desktop -R 90
+
+super + bracket{left,right}
+	bspc desktop -f {prev,next}
+
+super + ctrl + {Left,Down,Up,Right}
+	bspc window -p {left,down,up,right}
+
+super + ctrl + {_,shift + }space
+	bspc {window -p cancel,desktop -c}
+
+super + alt + {Left,Down,Up,Right}
+	bspc window -e {left -10,down +10,up -10,right +10}
+
+super + alt + shift + {Left,Down,Up,Right}
+	bspc window -e {right -10,up +10,down -10,left +10}
+
+super + ctrl + {1-9}
+	bspc window -r 0.{1-9}
+
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,window -d} $(bspc query -M -m):^{1-9,10}}
+
+~button1
+	bspc pointer -g focus
+
+super + button{1-3}
+	bspc pointer -g {move,resize_side,resize_corner}
+
+super + !button{1-3}
+	bspc pointer -t %i %i
+
+super + @button{1-3}
+	bspc pointer -u
+
+super + {minus,equal}
+        bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 4 ))
+#
+# wm independent hotkeys
+#
+
+super + Return
+	urxvt
+
+{_,shift + ,alt + } Print
+        xfce4-screenshooter {-f,-w,-r}
+
+super + e
+        xdg-open ~
+
+super + space
+	xfce4-popup-whiskermenu
+#	dmenu_run -w 500 -o 0.8 -i -p "Execute:" -fn "Tahoma-10:normal" -x 10 -y 22 -l 15
+
+super + l
+        xscreensaver-command -lock
+
+# make sxhkd reload its configuration files:
+super + Escape
+	pkill -USR1 -x sxhkd

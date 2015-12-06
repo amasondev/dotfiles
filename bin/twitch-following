@@ -1,0 +1,45 @@
+#!/bin/env python3
+
+import sys
+import requests
+import json
+
+if( len(sys.argv) < 2 ):
+	exit()
+
+def getLiveStreams( username ):
+	try:
+		data = requests.get( "https://api.twitch.tv/kraken/users/" + username + "/follows/channels" )
+		follows = json.loads( data.text )
+	except:
+		print( "There was an error" )
+		exit()
+
+	streams = list()
+	for c in follows['follows']:
+		if ( c['channel'] and c['channel']['name'] ):
+			name = c['channel']['name']
+			stream = requests.get( "https://api.twitch.tv/kraken/streams/" + name )
+			if stream.ok:
+				stream = json.loads( stream.text )
+				if( stream['stream'] ):
+					streams.append( stream['stream'] )
+
+	return streams
+
+
+username = sys.argv[1]
+
+streams = getLiveStreams( username )
+
+for i in range(len( streams )):
+	name = streams[i]['channel']['name']
+	game = streams[i]['game']
+	if( name ):
+		sys.stdout.write( name + " " )
+		if( game ):
+			sys.stdout.write( "playing: " + game + "  " )
+	if( i < len( streams ) - 1 ):
+		sys.stdout.write( "|| " )
+
+sys.stdout.write( "\n" )
