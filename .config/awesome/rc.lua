@@ -54,7 +54,7 @@ end
 
 -- beautiful init
 beautiful.init(os.getenv("HOME") .. 
-"/.config/awesome/themes/adwaita/theme.lua")
+"/.config/awesome/themes/matrix/theme.lua")
 
 
 -- Default modkey.
@@ -93,8 +93,8 @@ end
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
 tags = {
-	names = { "main" , "chat" , "files", "media" , "dev" , "mail" , "misc" },
-	layout = { layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1] }
+	names = { "main" , "chat" , "files", "media" , "games", "dev" , "mail" , "misc" },
+	layout = { layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1] }
 }
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
@@ -135,7 +135,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- {{{ Wibox
 local awesompd = require("awesompd/awesompd")
   musicwidget = awesompd:create() -- Create awesompd widget
-  musicwidget.font = "GohuFont" -- Set widget font 
+  musicwidget.font = "Source Sans Pro" -- Set widget font 
   musicwidget.scrolling = true -- If true, the text in the widget will be scrolled
   musicwidget.output_size = 30 -- Set the size of widget in symbols
   musicwidget.update_interval = 10 -- Set the update interval in seconds
@@ -486,6 +486,10 @@ awful.rules.rules = {
       properties = { border_width=0,floating = true } },
     { rule = { class = "Pqiv" },
       properties = { border_width=0 } },
+    { rule = { type = "desktop" },
+      properties = { border_width=0, } },
+	{ rule = { class = "Steam" },
+      properties = { border_width=0, floating = true, tag = tags[1][5] } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
@@ -505,7 +509,7 @@ client.connect_signal("manage", function (c, startup)
 
 
     -- {{{ Title Bars
-    local titlebars_enabled = false
+    local titlebars_enabled = true
     if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
         -- buttons for the titlebar
         local buttons = awful.util.table.join(
@@ -555,15 +559,6 @@ client.connect_signal("manage", function (c, startup)
         -- Set the windows at the slave,
         -- i.e. put it at the end of others instead of setting it master.
         --awful.client.setslave(c)
-        
-        -- Clients spawned by processes
-        for k,o in pairs(client.get()) do
-            if c.window ~= o.window and c.group_window == o.group_window then
-                c.screen = o.screen
-                c:tags(o:tags())
-                break
-            end
-        end
         
         -- Transient clients
         if c.transient_for then
