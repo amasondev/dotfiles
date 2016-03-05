@@ -54,7 +54,7 @@ end
 
 -- beautiful init
 beautiful.init(os.getenv("HOME") .. 
-"/.config/awesome/themes/matrix/theme.lua")
+"/.config/awesome/themes/adwaita/theme.lua")
 
 
 -- Default modkey.
